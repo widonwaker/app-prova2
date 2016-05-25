@@ -1,20 +1,53 @@
 <!DOCTYPE html>
-<head>
-  <title>Pusher Test</title>
-  <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
-  <script>
+<html>
+  <head>
+    <title>Notification Example</title>
+    <script type="text/javascript" charset="utf-8" src="android_push.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8">
 
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
 
-    var pusher = new Pusher('782e3ede2884438fbb36', {
-      cluster: 'eu',
-      encrypted: true
-    });
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        initPushwoosh();
+    }
 
-    var channel = pusher.subscribe('test_channel');
-    channel.bind('my_event', function(data) {
-      alert(data.message);
-    });
-  </script>
-</head>
+    // alert dialog dismissed
+        function alertDismissed() {
+            // do something
+        }
+
+    // Show a custom alertDismissed
+    //
+    function showAlert() {
+        navigator.notification.alert(
+            'You are the winner!',  // message
+            alertDismissed,         // callback
+            'Game Over',            // title
+            'Done'                  // buttonName
+        );
+    }
+    
+	
+	document.addEventListener('push-notification', function(event) {
+    //event.notification is a JSON push notifications payload
+    var title = event.notification.title;
+ 
+    //example of obtaining custom data from push notification
+    var userData = event.notification.userdata;
+ 
+    console.warn('user data: ' + JSON.stringify(userData));
+ 
+    //we might want to display an alert with push notifications title
+    alert(title);
+});
+    </script>
+  </head>
+  <body>
+    <p><a href="#" onclick="showAlert(); return false;">Show Alert</a></p>
+  </body>
+</html>
